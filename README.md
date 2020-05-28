@@ -72,17 +72,17 @@ docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -u 0 --privileg
 
 	```bash
 	docker run --rm -it -v $PWD/ca.crt:/tmp/ca.crt $JOB_IMAGE_NAME /opt/spark/bin/spark-submit \
-  --master k8s://https://$KUBE_API_HOST:443 \
-  --deploy-mode cluster \
-  --name my-job \
-  --conf spark.kubernetes.namespace=spark \
-  --conf spark.executor.instances=2 \
-  --conf spark.kubernetes.authenticate.driver.serviceAccountName=spark-sa \
-  --conf spark.kubernetes.container.image=$JOB_IMAGE_NAME \
-  --conf spark.kubernetes.authenticate.submission.caCertFile=/tmp/ca.crt \
-  --conf spark.kubernetes.authenticate.submission.oauthToken=$SPARK_TOKEN \
-  --executor-cores 1 --executor-memory 512M \
-  local:///opt/custom_jobs/script.py
+	  --master k8s://https://$KUBE_API_HOST:443 \
+	  --deploy-mode cluster \
+	  --name my-job \
+	  --conf spark.kubernetes.namespace=spark \
+	  --conf spark.executor.instances=2 \
+	  --conf spark.kubernetes.authenticate.driver.serviceAccountName=spark-sa \
+	  --conf spark.kubernetes.container.image=$JOB_IMAGE_NAME \
+	  --conf spark.kubernetes.authenticate.submission.caCertFile=/tmp/ca.crt \
+	  --conf spark.kubernetes.authenticate.submission.oauthToken=$SPARK_TOKEN \
+	  --executor-cores 1 --executor-memory 512M \
+	  local:///opt/custom_jobs/script.py
 	```
 
 	What happens :
