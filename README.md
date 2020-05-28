@@ -101,10 +101,14 @@ docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -u 0 --privileg
 There are many settings you can use, look at the docs. You will probably need to :
 
 - use private Docker images : `spark.kubernetes.container.image.pullSecrets`
-- inject secret env var : `spark.kubernetes.driver.secretKeyRef.[EnvName]` / `spark.kubernetes.executor.secretKeyRef.[EnvName]`
 - use dependencies : ?
+- inject credentials for external databases / AWS S3 : ? Maybe use secret env var : `spark.kubernetes.driver.secretKeyRef.[EnvName]` / `spark.kubernetes.executor.secretKeyRef.[EnvName]`
 - use scala : use a different base image
 
+## Mistakes not to be made
+
+- If Kubernetes API version is too recent, it won't be supported by the [Kubernetes client](https://github.com/fabric8io/kubernetes-client) used by Spark. I got things working with Kubernetes 1.18 and Spark 2.4.5.
+- Each executor needs at least 1 CPU and ~450MB RAM. This is quite a lot if you use a shared cluster. If your job doesn't start, use `kubectl -n spark get all` and `kubectl -n spark describe pods` to see if some pods are stuck in `pending` because you don't have enough resources.
 
 
 ## References
