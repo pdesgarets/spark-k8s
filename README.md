@@ -7,7 +7,6 @@ You need :
 - a Kubernetes cluster on which you can create serviceaccounts, clusterrole, rolebinding, pods and services, and the command line tool `kubectl` to do so
 - a python job, as a Python file
 - a base Docker Image with Spark, for example `my.registry.io/repository/base-spark:latest`
-- [jq](https://stedolan.github.io/jq/) to easily manipulate data from kubectl
 
 This simple tutorial assumes that your docker images are on public repositories, and your job fits in a single python file without any dependencies.
 
@@ -57,13 +56,13 @@ docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -u 0 --privileg
 	We will use the token granted to the service account `spark-sa` we created earlier :
 
 	```
-	export SPARK_TOKEN=$(kubectl -n spark get secret $(kubectl -n spark get serviceaccount spark-sa -o json|jq --raw-output ".secrets[0].name") -o json |jq -r ".data.\"token\"" |base64 --decode)
+	export SPARK_TOKEN=$(kubectl -n spark get secret $(kubectl -n spark get serviceaccount spark-sa -o "jsonpath={.secrets[0].name}") -o "jsonpath={.data.token}" |base64 --decode)
 	```
 
 	And the matching CA:
 
 	```
-	kubectl -n spark get secret $(kubectl -n spark get serviceaccount spark-sa -o json|jq --raw-output ".secrets[0].name") -o json |jq -r ".data.\"ca.crt\"" |base64 --decode > ca.crt
+	kubectl -n spark get secret $(kubectl -n spark get serviceaccount spark-sa -o "jsonpath={.secrets[0].name}") -o "jsonpath={.data.ca\.crt}" > ca.crt
 	```
 	The CA should begin with `-----BEGIN CERTIFICATE-----` and end with `-----END CERTIFICATE-----`
 
